@@ -1,66 +1,66 @@
-:root {
-  --bg: #f5f5f7;
-  --text: #000;
-  --muted: #86878a;
-}
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: #fafafa;
+  color: #000;
   font-family: "Poppins", -apple-system, "Helvetica Neue", Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.65;
+  font-size: 17px;
+  line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
 main {
-  max-width: 660px;
+  max-width: 780px;
   margin: 0 auto;
-  padding: 96px 24px 120px;
-}
-
-h1, h2 {
-  font-family: "Lexend", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  padding: 72px 24px 64px;
 }
 
 h1 {
-  font-weight: 700;
-  font-size: 2.1rem;
-  line-height: 1.2;
-  margin-bottom: 8px;
-}
-
-h2 {
   font-weight: 600;
-  font-size: 1.25rem;
-  margin: 48px 0 12px;
+  font-size: 2.2rem;
+  line-height: 1.25;
+  text-align: center;
+  margin-bottom: 72px;
 }
 
-p, li { margin-bottom: 12px; }
-
-ul { padding-left: 22px; }
-
-a { color: inherit; text-underline-offset: 3px; }
-a:hover { color: var(--muted); }
-
-.muted { color: var(--muted); }
-
-.lang-switch {
-  font-size: 0.9rem;
-  color: var(--muted);
-  margin-bottom: 56px;
+.row {
+  display: flex;
+  gap: 26px;
+  margin-bottom: 40px;
+  color: #86878a;
 }
 
-.divider {
-  border: none;
-  border-top: 1px solid #d9d9de;
-  margin: 80px 0;
+.row b { color: #000; font-weight: 500; }
+
+.icon { flex-shrink: 0; margin-top: 2px; color: #000; }
+
+.contact {
+  display: flex;
+  gap: 26px;
+  align-items: center;
+  background: #f1f1f2;
+  border-radius: 8px;
+  padding: 28px 26px;
+  margin-top: 72px;
+  color: #86878a;
 }
+
+.contact a {
+  color: #000;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.contact a:hover { text-decoration: underline; }
+.contact a .icon { margin: 0; width: 20px; height: 20px; }
 
 footer {
-  margin-top: 80px;
-  font-size: 0.9rem;
-  color: var(--muted);
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  margin-top: 88px;
 }
+
+a { color: inherit; }
