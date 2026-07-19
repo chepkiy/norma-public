@@ -4,8 +4,9 @@ body {
   background: #fafafa;
   color: #000;
   font-family: "Poppins", -apple-system, "Helvetica Neue", Arial, sans-serif;
-  font-size: 17px;
-  line-height: 1.6;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -16,9 +17,10 @@ main {
 }
 
 h1 {
+  font-family: "Lexend", -apple-system, "Helvetica Neue", Arial, sans-serif;
   font-weight: 600;
-  font-size: 2.2rem;
-  line-height: 1.25;
+  font-size: 36px;
+  line-height: 150%;
   text-align: center;
   margin-bottom: 72px;
 }
@@ -30,9 +32,9 @@ h1 {
   color: #86878a;
 }
 
-.row b { color: #000; font-weight: 500; }
+.row b { color: #000; font-weight: 400; }
 
-.icon { flex-shrink: 0; margin-top: 2px; color: #000; }
+.icon { flex-shrink: 0; margin-top: 1px; color: #000; }
 
 .contact {
   display: flex;
@@ -47,7 +49,6 @@ h1 {
 
 .contact a {
   color: #000;
-  font-weight: 500;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -57,9 +58,12 @@ h1 {
 .contact a .icon { margin: 0; width: 20px; height: 20px; }
 
 footer {
+  font-family: "Lexend Exa", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #000;
   text-align: center;
-  font-weight: 600;
-  letter-spacing: 0.04em;
   margin-top: 88px;
 }
 
