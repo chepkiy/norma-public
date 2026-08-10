@@ -16,6 +16,8 @@ main {
   padding: 72px 24px 64px;
 }
 
+[hidden] { display: none !important; }
+
 h1 {
   font-family: "Lexend", -apple-system, "Helvetica Neue", Arial, sans-serif;
   font-weight: 600;
@@ -23,6 +25,23 @@ h1 {
   line-height: 150%;
   text-align: center;
   margin-bottom: 72px;
+}
+
+h1.with-lede { margin-bottom: 4px; }
+
+h2 {
+  font-family: "Lexend", -apple-system, "Helvetica Neue", Arial, sans-serif;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.4;
+  margin-top: 72px;
+  margin-bottom: 20px;
+}
+
+.lede {
+  text-align: center;
+  color: #86878a;
+  margin-bottom: 40px;
 }
 
 .row {
@@ -56,6 +75,63 @@ h1 {
 }
 .contact a:hover { text-decoration: underline; }
 .contact a .icon { margin: 0; width: 20px; height: 20px; }
+
+h2 + .contact { margin-top: 0; }
+
+.get { margin-bottom: 72px; }
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #000;
+  color: #fafafa;
+  border-radius: 8px;
+  padding: 20px 26px;
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.cta .icon { color: inherit; margin: 0; }
+.cta:hover { opacity: 0.85; }
+.cta[aria-busy="true"] { opacity: 0.5; pointer-events: none; }
+
+.escape {
+  display: flex;
+  gap: 26px;
+  background: #f1f1f2;
+  border-radius: 8px;
+  padding: 28px 26px;
+  margin-bottom: 72px;
+  color: #86878a;
+}
+
+.escape b { color: #000; font-weight: 400; }
+.escape ol { margin: 16px 0 0 20px; }
+.escape li { margin-bottom: 6px; }
+
+.chip {
+  display: inline-block;
+  background: #fff;
+  border-radius: 5px;
+  padding: 0 8px;
+  color: #000;
+  letter-spacing: 1px;
+}
+
+.copy {
+  font: inherit;
+  color: #000;
+  background: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.copy:hover { opacity: 0.85; }
 
 footer {
   font-family: "Lexend Exa", -apple-system, "Helvetica Neue", Arial, sans-serif;
