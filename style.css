@@ -29,6 +29,15 @@ h1 {
 
 h1.with-lede { margin-bottom: 4px; }
 
+.appicon {
+  display: block;
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 24px;
+  border-radius: 25px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
 h2 {
   font-family: "Lexend", -apple-system, "Helvetica Neue", Arial, sans-serif;
   font-weight: 600;
