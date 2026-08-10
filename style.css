@@ -106,6 +106,27 @@ h2 + .contact { margin-top: 0; }
 .cta:hover { opacity: 0.85; }
 .cta[aria-busy="true"] { opacity: 0.5; pointer-events: none; }
 
+/* Bleeds past main's 24px padding so the strip runs to the screen edges. */
+.shots {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -24px 72px;
+  padding: 0 24px 10px;
+}
+
+.shots img {
+  flex: 0 0 auto;
+  width: 232px;
+  height: auto;
+  border-radius: 14px;
+  scroll-snap-align: center;
+  background: #f1f1f2;
+}
+
 .escape {
   display: flex;
   gap: 26px;
