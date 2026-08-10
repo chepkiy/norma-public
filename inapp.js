@@ -19,6 +19,13 @@
  * to a dead button. So step 3 runs for any iOS WebView we end up in, named or
  * not, driven by whether the hand-off actually worked rather than by who we
  * think is hosting us.
+ *
+ * One limit is worth stating plainly, because it looks like a bug: outside
+ * Instagram and Threads the visitor has to tap. iOS opens the App Store only
+ * from a genuine tap on a link, and a scripted navigation does not qualify, so
+ * no amount of work here can make the other hosts open the store on load.
+ * Instagram and Threads are the exception only because their own code, not
+ * iOS, answers the extbrowser scheme.
  */
 (function () {
   'use strict';
@@ -257,16 +264,15 @@
     });
   }
 
-  /* What to fire on load, per host. Only hosts whose hand-off has actually
-     been watched to work get one. A scheme the host ignores costs nothing, but
-     one it rejects can raise an error dialog, and that is worse than simply
-     showing the page — so this list grows only on device evidence.
-       instagram, threads: the private extbrowser scheme.
-       telegram: no escape scheme exists for it, but itms-apps:// does reach
-       the App Store from its WebView, so it needs no escape. */
+  /* What to fire on load, per host — and only the extbrowser hosts qualify.
+     Do not add itms-apps:// here for anyone: iOS hands off to the App Store
+     only from a real tap on a link. Assigning window.location counts as
+     address-bar navigation and is ignored, tested on device in Telegram, so an
+     on-load attempt with it does nothing at all. The extbrowser schemes are
+     exempt because Instagram and Threads intercept them in their own
+     navigation delegate before iOS ever sees them. */
   function autoUrl() {
     if (EXT_BROWSER[host]) return EXT_BROWSER[host] + encodeURIComponent(APP_STORE);
-    if (host === 'telegram') return STORE_SCHEME;
     return '';
   }
 
