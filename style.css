@@ -97,7 +97,7 @@ h2 + .contact { margin-top: 0; }
   gap: 12px;
   background: #000;
   color: #fafafa;
-  border-radius: 8px;
+  border-radius: 999px;
   padding: 20px 26px;
   text-decoration: none;
   transition: opacity 0.15s;
@@ -106,27 +106,6 @@ h2 + .contact { margin-top: 0; }
 .cta .icon { color: inherit; margin: 0; }
 .cta:hover { opacity: 0.85; }
 .cta[aria-busy="true"] { opacity: 0.5; pointer-events: none; }
-
-/* Bleeds past main's 24px padding so the strip runs to the screen edges. */
-.shots {
-  display: flex;
-  gap: 12px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
-  -webkit-overflow-scrolling: touch;
-  margin: 0 -24px 72px;
-  padding: 0 24px 10px;
-}
-
-.shots img {
-  flex: 0 0 auto;
-  width: 232px;
-  height: auto;
-  border-radius: 14px;
-  scroll-snap-align: center;
-  background: #f1f1f2;
-}
 
 .escape {
   display: flex;
