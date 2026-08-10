@@ -257,12 +257,26 @@
     });
   }
 
-  /* One free attempt on load. If the scheme still works the user never has to
-     tap anything; if it does not, nothing visible happens. */
-  if (AUTO_ATTEMPT && EXT_BROWSER[host] && !noAuto) {
+  /* What to fire on load, per host. Only hosts whose hand-off has actually
+     been watched to work get one. A scheme the host ignores costs nothing, but
+     one it rejects can raise an error dialog, and that is worse than simply
+     showing the page — so this list grows only on device evidence.
+       instagram, threads: the private extbrowser scheme.
+       telegram: no escape scheme exists for it, but itms-apps:// does reach
+       the App Store from its WebView, so it needs no escape. */
+  function autoUrl() {
+    if (EXT_BROWSER[host]) return EXT_BROWSER[host] + encodeURIComponent(APP_STORE);
+    if (host === 'telegram') return STORE_SCHEME;
+    return '';
+  }
+
+  /* One free attempt on load. If it works the user never has to tap anything;
+     if it does not, nothing visible happens. */
+  var auto = autoUrl();
+  if (AUTO_ATTEMPT && auto && !noAuto) {
     var mine = token;
     timers.push(setTimeout(function () {
-      if (mine === token) fire(EXT_BROWSER[host] + encodeURIComponent(APP_STORE));
+      if (mine === token) fire(auto);
     }, 300));
   }
 })();
