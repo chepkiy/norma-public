@@ -12,20 +12,6 @@
  * Steps 1 and 2 are undocumented and Meta breaks them periodically, so nothing
  * here assumes they work. Normal browsers never run any of it: the CTA is a
  * plain <a href> that already does the right thing.
- *
- * Naming the host is an enhancement, not a precondition. Telegram is the case
- * that forces this: its WebView is indistinguishable from Safari by user agent,
- * blocks the link just like Instagram does, and used to fall straight through
- * to a dead button. So step 3 runs for any iOS WebView we end up in, named or
- * not, driven by whether the hand-off actually worked rather than by who we
- * think is hosting us.
- *
- * One limit is worth stating plainly, because it looks like a bug: outside
- * Instagram and Threads the visitor has to tap. iOS opens the App Store only
- * from a genuine tap on a link, and a scripted navigation does not qualify, so
- * no amount of work here can make the other hosts open the store on load.
- * Instagram and Threads are the exception only because their own code, not
- * iOS, answers the extbrowser scheme.
  */
 (function () {
   'use strict';
@@ -56,31 +42,14 @@
   var isIOS = /iP(hone|od|ad)/.test(ua) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-  /* Telegram is the one host that cannot be sniffed: its WebView reports a user
-     agent byte-identical to Safari's, and has since at least 2022. It does
-     inject these globals, which is the only reliable signal there is.
-     https://github.com/TelegramMessenger/Telegram-iOS/issues/736 */
-  function isTelegram() {
-    return 'TelegramWebviewProxy' in window ||
-      'TelegramWebviewProxyProto' in window ||
-      'TelegramWebview' in window;
-  }
-
   function detectHost() {
-    if (isTelegram()) return 'telegram';
     if (/Instagram/i.test(ua)) return 'instagram';
     if (/Barcelona|Threads/i.test(ua)) return 'threads';
-    /* Messenger carries the FBAN tokens too, so it has to be tested first. */
-    if (/FB[\w_]+\/Messenger/i.test(ua)) return 'messenger';
     if (/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)) return 'facebook';
     if (/TikTok|musical_ly|BytedanceWebview/i.test(ua)) return 'tiktok';
     if (/LinkedInApp/i.test(ua)) return 'linkedin';
     if (/Snapchat/i.test(ua)) return 'snapchat';
     if (/Pinterest\//i.test(ua)) return 'pinterest';
-    if (/\b(WAiOS|WA4A)\//i.test(ua)) return 'whatsapp';
-    if (/MicroMessenger\//i.test(ua)) return 'wechat';
-    if (/\bReddit\//i.test(ua)) return 'reddit';
-    if (/\bTwitter/i.test(ua)) return 'twitter';
     return '';
   }
 
@@ -88,16 +57,10 @@
     instagram: 'Instagram',
     threads: 'Threads',
     facebook: 'Facebook',
-    messenger: 'Messenger',
     tiktok: 'TikTok',
     linkedin: 'LinkedIn',
     snapchat: 'Snapchat',
-    pinterest: 'Pinterest',
-    telegram: 'Telegram',
-    whatsapp: 'WhatsApp',
-    wechat: 'WeChat',
-    reddit: 'Reddit',
-    twitter: 'X'
+    pinterest: 'Pinterest'
   };
 
   /* The wording of the menu item differs per app. */
@@ -105,43 +68,17 @@
     instagram: 'Open in browser',
     threads: 'Open in browser',
     facebook: 'Open in Safari',
-    messenger: 'Open in Safari',
     tiktok: 'Open in browser',
     linkedin: 'Open in Safari',
     snapchat: 'Open in Safari',
-    pinterest: 'Open in browser',
-    telegram: 'Open in Safari',
-    whatsapp: 'Open in Safari',
-    wechat: 'Open in Safari',
-    reddit: 'Open in Safari',
-    twitter: 'Open in Safari'
-  };
-
-  /* Only the Meta apps reliably hide the exit behind ... in the top right.
-     Naming a control the visitor cannot find is worse than saying "the menu",
-     so everyone else gets wording that does not point at a specific button. */
-  var DOT_MENU = {
-    instagram: true,
-    threads: true,
-    facebook: true,
-    messenger: true
+    pinterest: 'Open in browser'
   };
 
   var host = detectHost();
 
-  /* Real Mobile Safari reports both a Version/ and a Safari/ token; a bare
-     WKWebView reports neither. */
-  var looksLikeSafari = /Version\/[\d.]+/.test(ua) && /Safari\//.test(ua);
-
-  /* Only iOS needs any of this: the link is an App Store link. */
-  if (!isIOS) return;
-
-  /* Recognising the host is an enhancement, not a precondition. An unnamed
-     WebView still gets the fallback below, because the useful signal is
-     whether the hand-off worked, not who is hosting us. Anything that looks
-     like real Safari and is not a known host is left alone, so the plain link
-     keeps working where it already works. */
-  if (!host && looksLikeSafari) return;
+  /* Only iOS in-app browsers need any of this. Everywhere else the plain link
+     works, and hijacking it would only add ways to fail. */
+  if (!isIOS || !host) return;
 
   var noAuto = /[?&]noauto\b/.test(window.location.search);
 
@@ -231,10 +168,8 @@
 
   var nameSlot = document.getElementById('escape-app');
   var exitSlot = document.getElementById('escape-exit');
-  var menuSlot = document.getElementById('escape-menu');
   if (nameSlot) nameSlot.textContent = NAMES[host] || 'This app';
   if (exitSlot) exitSlot.textContent = EXIT_LABEL[host] || 'Open in browser';
-  if (menuSlot && !DOT_MENU[host]) menuSlot.textContent = 'Open this browser’s menu.';
 
   var copy = document.getElementById('copy');
   if (copy) {
@@ -264,25 +199,12 @@
     });
   }
 
-  /* What to fire on load, per host — and only the extbrowser hosts qualify.
-     Do not add itms-apps:// here for anyone: iOS hands off to the App Store
-     only from a real tap on a link. Assigning window.location counts as
-     address-bar navigation and is ignored, tested on device in Telegram, so an
-     on-load attempt with it does nothing at all. The extbrowser schemes are
-     exempt because Instagram and Threads intercept them in their own
-     navigation delegate before iOS ever sees them. */
-  function autoUrl() {
-    if (EXT_BROWSER[host]) return EXT_BROWSER[host] + encodeURIComponent(APP_STORE);
-    return '';
-  }
-
-  /* One free attempt on load. If it works the user never has to tap anything;
-     if it does not, nothing visible happens. */
-  var auto = autoUrl();
-  if (AUTO_ATTEMPT && auto && !noAuto) {
+  /* One free attempt on load. If the scheme still works the user never has to
+     tap anything; if it does not, nothing visible happens. */
+  if (AUTO_ATTEMPT && EXT_BROWSER[host] && !noAuto) {
     var mine = token;
     timers.push(setTimeout(function () {
-      if (mine === token) fire(auto);
+      if (mine === token) fire(EXT_BROWSER[host] + encodeURIComponent(APP_STORE));
     }, 300));
   }
 })();
